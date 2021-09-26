@@ -1,10 +1,15 @@
 \documentclass[10pt,letterpaper]{article}
+\usepackage{amsmath}
+\usepackage[T1]{fontenc}
 
 \begin{document}
 
 \section{Grammar}
 
-\
-
+<Exp> ::= <Term><Exp$^{\prime}$>\\
+<Exp$^{\prime}$> ::= $+$<Exp> | $-$<Exp> | $\epsilon$\\
+<Term> ::= <Factor><Term$^{\prime}$>\\
+<Term$^\prime$> ::= $\times$<Term> | $\div$<Term> | $\epsilon$\\
+<Factor> ::= (<Exp>) | digit
 
 \end{document}
