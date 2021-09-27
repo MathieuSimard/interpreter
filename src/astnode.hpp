@@ -8,7 +8,7 @@ namespace solidity {
 
 struct AstNode
 {
-  using Ptr = std::unique_ptr<AstNode>;
+  using Ptr = std::shared_ptr<AstNode>;
 
   enum Type
   {
@@ -19,6 +19,11 @@ struct AstNode
     DIV,
     ERR,
   };
+
+  static AstNode::Ptr create(Type type, const Ptr &left, const Ptr &right);
+  static AstNode::Ptr create(double val);
+
+  AstNode(Type type, double val, const Ptr &left, const Ptr &right);
 
   Type m_type = Type::ERR;
   double m_val = 0;

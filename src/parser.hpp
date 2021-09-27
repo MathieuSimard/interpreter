@@ -20,14 +20,9 @@ public:
     Exception(const std::string &msg);                                                                                         
   };  
 
-  Parser(const std::string &line);
-  AstNode::Ptr parse() const;
+  AstNode::Ptr parse(const std::string &line);
 
 private:
-  static AstNode::Ptr createNode(AstNode::Type type, const AstNode::Ptr &left, const AstNode::Ptr &right);
-
-  void init(const std::string &line);
-
   AstNode::Ptr Exp() const;
   AstNode::Ptr ExpPr() const;
   AstNode::Ptr Term() const;

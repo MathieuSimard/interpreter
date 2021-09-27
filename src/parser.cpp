@@ -1,5 +1,7 @@
 #include "parser.hpp"
 
+#include "astnode.hpp"
+
 #include <stdexcept>
 
 
@@ -12,30 +14,19 @@ Parser::Exception::Exception(const std::string &msg)
 {                                                                                                                              
 }                                                                                                                              
 
-Parser::Parser(const std::string &line)
-{
-  init(line);
-}
-
-AstNode::Ptr Parser::parse() const
-{
-  return Exp();
-}
-
-AstNode::Ptr createNode(AstNode::Type type, const AstNode::Ptr &left, const AstNode::Ptr &right)
-{
-}
-
-void Parser::init(const std::string &line)
+AstNode::Ptr Parser::parse(const std::string &line)
 {
   m_line = line;
   m_index = 0;
   toNextToken();
+  return Exp();
 }
 
 AstNode::Ptr Parser::Exp() const
 {
-  return {};
+  AstNode::Ptr left = Term();
+  AstNode::Ptr right = ExpPr();
+  return AstNode::create(AstNode::Type::ADD, left, right);
 }
 
 AstNode::Ptr Parser::ExpPr() const
