@@ -1,8 +1,10 @@
 list(
   APPEND
   srcs
+  astnode.cpp
+  evaluator.cpp
   parser.cpp
-  type.cpp
+  token.cpp
   main.cpp
 )
 

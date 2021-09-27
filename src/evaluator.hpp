@@ -4,7 +4,7 @@
 namespace solidity {
 
 
-class Parser
+class Evaluator
 {
 };
 
