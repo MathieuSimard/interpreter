@@ -10,6 +10,7 @@ namespace solidity {
 
 static std::map<Token::Type, std::string> token_type_map
 {
+  { Token::Type::NONE, "NONE" },
   { Token::Type::NUM, "NUMERIC" },
   { Token::Type::ADD, "ADDITION" },
   { Token::Type::SUB, "SUBSTRACTION" },
@@ -18,7 +19,6 @@ static std::map<Token::Type, std::string> token_type_map
   { Token::Type::OPAR, "OPEN PARENTHESIS" },
   { Token::Type::CPAR, "CLOSED PARENTHESIS" },
   { Token::Type::EOL, "END OF LINE" },
-  { Token::Type::ERR, "ERROR" },
 };
 
 std::ostream& operator<<(std::ostream& os, Token::Type token_type)

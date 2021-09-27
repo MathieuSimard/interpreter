@@ -9,6 +9,7 @@ struct Token
 {
   enum Type
   {
+    NONE,
     NUM,
     ADD,
     SUB,
@@ -17,12 +18,11 @@ struct Token
     OPAR,
     CPAR,
     EOL,
-    ERR,
   };
 
-  Type m_type = Type::ERR;
-  double m_val = 0;
+  Type m_type = Type::NONE;
   char m_sym = 0;
+  double m_val = 0;
 };
 
 std::ostream& operator<<(std::ostream& os, Token::Type token_type);

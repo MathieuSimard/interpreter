@@ -8,5 +8,4 @@ using namespace solidity;
 
 int main()
 {
-  std::cout << Token::Type::ERR << std::endl;
 }

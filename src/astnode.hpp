@@ -12,12 +12,12 @@ struct AstNode
 
   enum Type
   {
+    NONE,
     NUM,
     ADD,
     SUB,
     MUL,
     DIV,
-    ERR,
   };
 
   static AstNode::Ptr create(Type type, const Ptr &left, const Ptr &right);
@@ -25,7 +25,7 @@ struct AstNode
 
   AstNode(Type type, double val, const Ptr &left, const Ptr &right);
 
-  Type m_type = Type::ERR;
+  Type m_type = Type::NONE;
   double m_val = 0;
   Ptr m_left = nullptr;
   Ptr m_right = nullptr;
