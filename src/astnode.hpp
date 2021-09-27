@@ -8,6 +8,8 @@ namespace solidity {
 
 struct AstNode
 {
+  using Ptr = std::unique_ptr<AstNode>;
+
   enum Type
   {
     NUM,
@@ -20,8 +22,8 @@ struct AstNode
 
   Type m_type = Type::ERR;
   double m_val = 0;
-  std::unique_ptr<AstNode> m_left = nullptr;
-  std::unique_ptr<AstNode> m_right = nullptr;
+  Ptr m_left = nullptr;
+  Ptr m_right = nullptr;
 };
 
 std::ostream& operator<<(std::ostream& os, AstNode::Type ast_node_type);

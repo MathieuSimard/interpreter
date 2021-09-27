@@ -1,7 +1,6 @@
 #pragma once
 #include "astnode.hpp"
 
-#include <memory>
 #include <stdexcept>
 #include <string>
 
@@ -18,10 +17,10 @@ public:
     Exception(const std::string &msg);
   };
 
-  double eval(const std::unique_ptr<AstNode> &ast) const;
+  double eval(const AstNode::Ptr &ast) const;
 
 private:
-  double evalSubTree(const std::unique_ptr<AstNode> &ast) const;
+  double evalSubTree(const AstNode::Ptr &ast) const;
 };
 
 

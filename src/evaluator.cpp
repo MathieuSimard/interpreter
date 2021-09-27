@@ -13,7 +13,7 @@ Evaluator::Exception::Exception(const std::string &msg)
 {
 }
 
-double Evaluator::eval(const std::unique_ptr<AstNode> &ast) const
+double Evaluator::eval(const AstNode::Ptr &ast) const
 {
   if (!ast)
   {
@@ -22,7 +22,7 @@ double Evaluator::eval(const std::unique_ptr<AstNode> &ast) const
   evalSubTree(ast);
 }
 
-double Evaluator::evalSubTree(const std::unique_ptr<AstNode> &ast) const
+double Evaluator::evalSubTree(const AstNode::Ptr &ast) const
 {
   if (!ast)
   {
