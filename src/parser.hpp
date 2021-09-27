@@ -23,11 +23,11 @@ public:
   AstNode::Ptr parse(const std::string &line);
 
 private:
-  AstNode::Ptr Exp() const;
-  AstNode::Ptr ExpPr() const;
-  AstNode::Ptr Term() const;
-  AstNode::Ptr TermPr() const;
-  AstNode::Ptr Factor() const;
+  AstNode::Ptr Exp();
+  AstNode::Ptr ExpPr();
+  AstNode::Ptr Term();
+  AstNode::Ptr TermPr();
+  AstNode::Ptr Factor();
 
   void toNextToken();
 

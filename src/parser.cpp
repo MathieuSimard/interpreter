@@ -26,29 +26,48 @@ AstNode::Ptr Parser::parse(const std::string &line)
   return Exp();
 }
 
-AstNode::Ptr Parser::Exp() const
+AstNode::Ptr Parser::Exp()
 {
   AstNode::Ptr left = Term();
   AstNode::Ptr right = ExpPr();
   return AstNode::create(AstNode::Type::ADD, left, right);
 }
 
-AstNode::Ptr Parser::ExpPr() const
+AstNode::Ptr Parser::ExpPr()
+{
+  if (m_token.m_type == Token::Type::ADD)
+  {
+    toNextToken();
+    AstNode::Ptr right = Term();
+    AstNode::Ptr left = Exp();
+    return AstNode::create(AstNode::Type::ADD, left, right);  
+  }
+  else if (m_token.m_type == Token::Type::SUB)
+  {
+    toNextToken();
+    AstNode::Ptr right = Term();
+    AstNode::Ptr left = Exp();
+    return AstNode::create(AstNode::Type::SUB, left, right);
+  }
+  else
+  {
+    AstNode::create(0);
+  }
+}
+
+AstNode::Ptr Parser::Term()
+{
+  AstNode::Ptr left = Factor();
+  AstNode::Ptr right = TermPr();
+  return AstNode::create(AstNode::Type::MUL, left, right);
+}
+
+AstNode::Ptr Parser::TermPr()
 {
   return {};
 }
 
-AstNode::Ptr Parser::Term() const
-{
-  return {};
-}
-
-AstNode::Ptr Parser::TermPr() const
-{
-  return {};
-}
-
-AstNode::Ptr Parser::Factor() const
+AstNode::Ptr Parser::Factor()
 {
   return {};
 }

@@ -7,9 +7,9 @@
 \section{Grammar}
 
 <Exp> ::= <Term><Exp$^{\prime}$>\\
-<Exp$^{\prime}$> ::= $+$<Exp> | $-$<Exp> | $\epsilon$\\
+<Exp$^{\prime}$> ::= $+$ <Term><Exp$^{\prime}$> | $-$ <Term><Exp$^{\prime}$> | $\epsilon$\\
 <Term> ::= <Factor><Term$^{\prime}$>\\
-<Term$^\prime$> ::= $\times$<Term> | $\div$<Term> | $\epsilon$\\
+<Term$^\prime$> ::= $\times$ <Factor><Term$^{\prime}$> | $\div$<Factor><Term$^{\prime}$> | $\epsilon$\\
 <Factor> ::= (<Exp>) | digit
 
 \end{document}
