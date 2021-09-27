@@ -29,6 +29,7 @@ private:
   AstNode::Ptr TermPr();
   AstNode::Ptr Factor();
 
+  char getToken() const;
   void toNextToken();
 
   std::string m_line;
