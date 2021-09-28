@@ -21,7 +21,6 @@ struct Token
   };
 
   Type m_type = Type::NONE;
-  char m_sym = 0;
   double m_val = 0;
 };
 

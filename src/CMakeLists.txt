@@ -3,6 +3,7 @@ list(
   srcs
   astnode.cpp
   evaluator.cpp
+  interpreter.cpp
   parser.cpp
   token.cpp
   main.cpp

@@ -18,6 +18,8 @@ set(ENV{PKG_CONFIG_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 find_package(PkgConfig MODULE REQUIRED)
 pkg_search_module(PKG_GTEST REQUIRED IMPORTED_TARGET gtest_main)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -ggdb3 -O0")
+
 add_subdirectory(src)
 add_subdirectory(test)
 

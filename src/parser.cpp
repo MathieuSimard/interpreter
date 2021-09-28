@@ -128,8 +128,12 @@ char Parser::getToken() const
 void Parser::toNextToken()
 {
   m_token.m_type = Token::Type::NONE;
-  m_token.m_sym = 0;
   m_token.m_val = 0;
+  
+  if (m_index == m_line.size())
+  {
+    return;
+  }
 
   while (std::isspace(getToken()))
   {
@@ -143,13 +147,12 @@ void Parser::toNextToken()
 
   if (std::isdigit(getToken()))
   {
-    if (!(m_index < m_line.size() - 1 || !std::isdigit(m_line.at(m_index + 1))))
+    if (m_index + 1 < m_line.size() && std::isdigit(m_line.at(m_index + 1)))
     {
       throw Exception("only sigle-digit decimal integer allowed");
     }
     m_token.m_type = Token::Type::NUM;
-    m_token.m_sym = getToken();
-    m_token.m_val = m_token.m_sym - '0';
+    m_token.m_val = getToken() - '0';
     ++m_index;
     return;
   }
@@ -185,7 +188,6 @@ void Parser::toNextToken()
     throw Exception(msg.str());
   }
 
-  m_token.m_sym = getToken();
   ++m_index;
 }
 
