@@ -14,12 +14,12 @@ AstNode::Ptr AstNode::create(Type type, const Ptr &left, const Ptr &right)
   return std::make_shared<AstNode>(type, 0, left, right);
 }
 
-AstNode::Ptr AstNode::create(double val)
+AstNode::Ptr AstNode::create(long val)
 {
   return std::make_shared<AstNode>(AstNode::Type::NUM, val, nullptr, nullptr);
 }
 
-AstNode::AstNode(Type type, double val, const Ptr &left, const Ptr& right)
+AstNode::AstNode(Type type, long val, const Ptr &left, const Ptr& right)
 :
   m_type(type),
   m_val(val),

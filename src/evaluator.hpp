@@ -17,10 +17,10 @@ public:
     Exception(const std::string &msg);
   };
 
-  double eval(const AstNode::Ptr &ast) const;
+  long eval(const AstNode::Ptr &ast) const;
 
 private:
-  double evalSubTree(const AstNode::Ptr &ast) const;
+  long evalSubTree(const AstNode::Ptr &ast) const;
 };
 
 

@@ -11,7 +11,7 @@ namespace solidity {
 class Interpreter
 {
 public:
-  double eval(const std::string& line);
+  long eval(const std::string& line);
 
 private:
   Parser m_parser;

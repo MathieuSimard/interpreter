@@ -53,15 +53,27 @@ AstNode::Ptr Parser::ExpPr()
   }
   else
   {
-    AstNode::create(0);
+    return AstNode::create(0);
   }
 }
 
 AstNode::Ptr Parser::Term()
 {
   AstNode::Ptr left = Factor();
+  Token::Type type = m_token.m_type;
   AstNode::Ptr right = TermPr();
-  return AstNode::create(AstNode::Type::MUL, left, right);
+  if (type == Token::Type::MUL)
+  {
+    return AstNode::create(AstNode::Type::MUL, left, right);
+  }
+  else if (type == Token::Type::DIV)
+  {
+    return AstNode::create(AstNode::Type::DIV, left, right);
+  }
+  else
+  {
+    return left;
+  }
 }
 
 AstNode::Ptr Parser::TermPr()
@@ -79,12 +91,20 @@ AstNode::Ptr Parser::TermPr()
   {
     toNextToken();
     right = Factor();
-    left = TermPr();
-    return AstNode::create(AstNode::Type::DIV, left, right);
+    Token::Type type = m_token.m_type;
+    if (type == Token::Type::DIV)
+    {
+      left = TermPr();
+      return AstNode::create(AstNode::Type::DIV, left, right);
+    }
+    else
+    {
+      return right;
+    }
   }
   else
   {
-    AstNode::create(1);
+    return AstNode::create(1);
   }
 }
 
@@ -95,7 +115,7 @@ AstNode::Ptr Parser::Factor()
   {
     toNextToken();
     node = Exp();
-    if (getToken() == ')')
+    if (m_line.at(m_index - 1) == ')')
     {
       toNextToken();
       return node;
@@ -109,13 +129,22 @@ AstNode::Ptr Parser::Factor()
   }
   else if (m_token.m_type == Token::Type::NUM)
   {
+    long val = m_token.m_val; 
+    std::cout << val << std::endl;
     toNextToken();
-    return AstNode::create(m_token.m_val);
+    return AstNode::create(val);
+  }
+  else if (m_token.m_type == Token::Type::SUB)
+  {
+    std::ostringstream msg;
+    msg << "unary minus fordibben at position " << m_index;
+    throw Exception(msg.str());
   }
   else
   {
     std::ostringstream msg;
-    msg << "invalid token '" << getToken() << "' at position " << m_index;
+    //here check if over
+    msg << "invalid token at position " << m_index;
     throw Exception(msg.str());
   }
 }
@@ -132,6 +161,7 @@ void Parser::toNextToken()
   
   if (m_index == m_line.size())
   {
+    m_token.m_type = Token::Type::EOL;
     return;
   }
 

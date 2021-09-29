@@ -21,12 +21,12 @@ struct AstNode
   };
 
   static AstNode::Ptr create(Type type, const Ptr &left, const Ptr &right);
-  static AstNode::Ptr create(double val);
+  static AstNode::Ptr create(long val);
 
-  AstNode(Type type, double val, const Ptr &left, const Ptr &right);
+  AstNode(Type type, long val, const Ptr &left, const Ptr &right);
 
   Type m_type = Type::NONE;
-  double m_val = 0;
+  long m_val = 0;
   Ptr m_left = nullptr;
   Ptr m_right = nullptr;
 };

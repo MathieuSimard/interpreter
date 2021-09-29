@@ -4,6 +4,7 @@ list(
   astnode.cpp
   evaluator.cpp
   interpreter.cpp
+  log.cpp
   parser.cpp
   token.cpp
   main.cpp

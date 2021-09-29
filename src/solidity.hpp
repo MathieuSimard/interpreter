@@ -1,5 +1,6 @@
 #include "astnode.hpp"
 #include "evaluator.hpp"
 #include "interpreter.hpp"
+#include "log.hpp"
 #include "parser.hpp"
 #include "token.hpp"

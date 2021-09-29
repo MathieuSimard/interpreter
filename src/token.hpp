@@ -21,7 +21,7 @@ struct Token
   };
 
   Type m_type = Type::NONE;
-  double m_val = 0;
+  long m_val = 0;
 };
 
 std::ostream& operator<<(std::ostream& os, Token::Type token_type);

@@ -13,7 +13,7 @@ Evaluator::Exception::Exception(const std::string &msg)
 {
 }
 
-double Evaluator::eval(const AstNode::Ptr &ast) const
+long Evaluator::eval(const AstNode::Ptr &ast) const
 {
   if (!ast)
   {
@@ -22,7 +22,7 @@ double Evaluator::eval(const AstNode::Ptr &ast) const
   evalSubTree(ast);
 }
 
-double Evaluator::evalSubTree(const AstNode::Ptr &ast) const
+long Evaluator::evalSubTree(const AstNode::Ptr &ast) const
 {
   if (!ast)
   {
@@ -35,8 +35,8 @@ double Evaluator::evalSubTree(const AstNode::Ptr &ast) const
   }
   else
   {
-    double vl = evalSubTree(ast->m_left);
-    double vr = evalSubTree(ast->m_right);
+    long vl = evalSubTree(ast->m_left);
+    long vr = evalSubTree(ast->m_right);
     if (ast->m_type == AstNode::Type::ADD)
     {
       return vl + vr;
@@ -51,6 +51,8 @@ double Evaluator::evalSubTree(const AstNode::Ptr &ast) const
     }
     else if (ast->m_type == AstNode::Type::DIV)
     {
+      std::cout << "vl = " << vl << std::endl;
+      std::cout << "vr = " << vr << std::endl;
       return vl / vr;
     }
   }
