@@ -1,6 +1,7 @@
 #include "parser.hpp"
 
 #include "astnode.hpp"
+#include "log.hpp"
 #include "token.hpp"
 
 #include <sstream>
@@ -12,9 +13,21 @@
 namespace solidity {
 
 
-Parser::Exception::Exception(const std::string &msg)                                                                        
+Parser::DigitException::DigitException(std::size_t index)                                                                        
 :                                                                                                                              
-  std::runtime_error(msg)                                                                                                      
+  std::runtime_error(Log() << "single digit required, index = " << index)
+{                                                                                                                              
+}                                                                                                                              
+
+Parser::UnaryMinusException::UnaryMinusException(std::size_t index)                                                                        
+:                                                                                                                              
+  std::runtime_error(Log() << "unary minus forbidden, index = " << index)
+{                                                                                                                              
+}                                                                                                                              
+
+Parser::TokenException::TokenException(char token, std::size_t index)                                                                        
+:                                                                                                                              
+  std::runtime_error(Log() << "invalid token " << token << ", index = " << index)
 {                                                                                                                              
 }                                                                                                                              
 
@@ -122,30 +135,22 @@ AstNode::Ptr Parser::Factor()
     }
     else
     {
-      std::ostringstream msg;
-      msg << "invalid token '" << getToken() << "' at position " << m_index << ", expected ')'";
-      throw Exception(msg.str());
+      throw TokenException(getToken(), m_index);
     }
   }
   else if (m_token.m_type == Token::Type::NUM)
   {
     long val = m_token.m_val; 
-    std::cout << val << std::endl;
     toNextToken();
     return AstNode::create(val);
   }
   else if (m_token.m_type == Token::Type::SUB)
   {
-    std::ostringstream msg;
-    msg << "unary minus fordibben at position " << m_index;
-    throw Exception(msg.str());
+    throw UnaryMinusException(m_index);
   }
   else
   {
-    std::ostringstream msg;
-    //here check if over
-    msg << "invalid token at position " << m_index;
-    throw Exception(msg.str());
+    throw TokenException(getToken(), m_index);
   }
 }
 
@@ -179,7 +184,7 @@ void Parser::toNextToken()
   {
     if (m_index + 1 < m_line.size() && std::isdigit(m_line.at(m_index + 1)))
     {
-      throw Exception("only sigle-digit decimal integer allowed");
+      throw DigitException(m_index);
     }
     m_token.m_type = Token::Type::NUM;
     m_token.m_val = getToken() - '0';
@@ -213,9 +218,7 @@ void Parser::toNextToken()
   }
   else
   {
-    std::ostringstream msg;
-    msg << "invalid token '" << getToken() << "' at position " << m_index; 
-    throw Exception(msg.str());
+    throw TokenException(getToken(), m_index);
   }
 
   ++m_index;

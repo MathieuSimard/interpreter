@@ -14,11 +14,23 @@ namespace solidity {
 class Parser
 {
 public:
-  class Exception : public std::runtime_error                                                                                  
+  class DigitException : public std::runtime_error                                                                                  
   {                                                                                                                            
   public:                                                                                                                      
-    Exception(const std::string &msg);                                                                                         
-  };  
+    DigitException(std::size_t index);                                                                                         
+  };
+
+  class UnaryMinusException : public std::runtime_error                                                                                  
+  {                                                                                                                            
+  public:                                                                                                                      
+    UnaryMinusException(std::size_t index);                                                                                         
+  };
+
+  class TokenException : public std::runtime_error                                                                                  
+  {                                                                                                                            
+  public:                                                                                                                      
+    TokenException(char token, std::size_t index);                                                                                         
+  };
 
   AstNode::Ptr parse(const std::string &line);
 
