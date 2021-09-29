@@ -14,22 +14,24 @@ namespace solidity {
 class Parser
 {
 public:
-  class DigitException : public std::runtime_error                                                                                  
+  struct DigitException : std::runtime_error                                                                                  
   {                                                                                                                            
-  public:                                                                                                                      
     DigitException(std::size_t index);                                                                                         
   };
 
-  class UnaryMinusException : public std::runtime_error                                                                                  
+  struct UnaryMinusException : std::runtime_error                                                                                  
   {                                                                                                                            
-  public:                                                                                                                      
-    UnaryMinusException(std::size_t index);                                                                                         
+    UnaryMinusException(const Parser &p);                                                                                         
   };
 
-  class TokenException : public std::runtime_error                                                                                  
+  struct ParenthesisException : std::runtime_error                                                                                  
   {                                                                                                                            
-  public:                                                                                                                      
-    TokenException(char token, std::size_t index);                                                                                         
+    ParenthesisException(const Parser &p);                                                                                         
+  };
+
+  struct TokenException : std::runtime_error                                                                                  
+  {                                                                                                                            
+    TokenException(const Parser &p);                                                                                         
   };
 
   AstNode::Ptr parse(const std::string &line);

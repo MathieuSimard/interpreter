@@ -2,7 +2,6 @@
 #include "astnode.hpp"
 
 #include <stdexcept>
-#include <string>
 
 
 namespace solidity {
@@ -11,10 +10,19 @@ namespace solidity {
 class Evaluator
 {
 public:
-  class Exception : public std::runtime_error
+  struct NullException : std::runtime_error
   {
-  public:
-    Exception(const std::string &msg);
+    NullException();
+  };
+
+  struct TreeException : std::runtime_error
+  {
+    TreeException();
+  };
+
+  struct DivideByZeroException : std::runtime_error
+  {
+    DivideByZeroException();
   };
 
   long eval(const AstNode::Ptr &ast) const;

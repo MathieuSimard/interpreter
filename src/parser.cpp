@@ -15,19 +15,27 @@ namespace solidity {
 
 Parser::DigitException::DigitException(std::size_t index)                                                                        
 :                                                                                                                              
-  std::runtime_error(Log() << "single digit required, index = " << index)
+  std::runtime_error(Log() << "single digit required at index = " << index)
 {                                                                                                                              
 }                                                                                                                              
 
-Parser::UnaryMinusException::UnaryMinusException(std::size_t index)                                                                        
+Parser::UnaryMinusException::UnaryMinusException(const Parser &p)                                                                        
 :                                                                                                                              
-  std::runtime_error(Log() << "unary minus forbidden, index = " << index)
+  std::runtime_error(Log() << "unary minus forbidden at index = " << p.m_index - 1)
 {                                                                                                                              
 }                                                                                                                              
 
-Parser::TokenException::TokenException(char token, std::size_t index)                                                                        
+Parser::ParenthesisException::ParenthesisException(const Parser &p)                                                                        
 :                                                                                                                              
-  std::runtime_error(Log() << "invalid token " << token << ", index = " << index)
+  std::runtime_error(Log() << "missing closing parenthesis after token '"
+    << p.m_line.at(p.m_index - 1) << "' at index = " << p.m_index - 1)
+{                                                                                                                              
+}                                                                                                                              
+
+Parser::TokenException::TokenException(const Parser &p)                                                                        
+:                                                                                                                              
+  std::runtime_error(Log() << "invalid token '"
+    << p.m_line.at(p.m_index - 1) << "' at index = " << p.m_index - 1)
 {                                                                                                                              
 }                                                                                                                              
 
@@ -93,22 +101,26 @@ AstNode::Ptr Parser::TermPr()
 {
   AstNode::Ptr left;
   AstNode::Ptr right;
-  if (m_token.m_type == Token::Type::MUL)
+  if (m_token.m_type == Token::OPAR || m_token.m_type == Token::CPAR)
+  {
+    throw TokenException(*this);
+  }
+  else if (m_token.m_type == Token::MUL)
   {
     toNextToken();
     right = Factor();
     left = TermPr();
-    return AstNode::create(AstNode::Type::MUL, left, right);  
+    return AstNode::create(AstNode::MUL, left, right);  
   }
-  else if (m_token.m_type == Token::Type::DIV)
+  else if (m_token.m_type == Token::DIV)
   {
     toNextToken();
     right = Factor();
     Token::Type type = m_token.m_type;
-    if (type == Token::Type::DIV)
+    if (type == Token::DIV)
     {
       left = TermPr();
-      return AstNode::create(AstNode::Type::DIV, left, right);
+      return AstNode::create(AstNode::DIV, left, right);
     }
     else
     {
@@ -123,34 +135,33 @@ AstNode::Ptr Parser::TermPr()
 
 AstNode::Ptr Parser::Factor()
 {
-  AstNode::Ptr node;
-  if (m_token.m_type == Token::Type::OPAR)
+  if (m_token.m_type == Token::OPAR)
   {
     toNextToken();
-    node = Exp();
-    if (m_line.at(m_index - 1) == ')')
+    AstNode::Ptr exp = Exp();
+    if (m_token.m_type != Token::EOL && m_line.at(m_index - 1) == ')')
     {
       toNextToken();
-      return node;
+      return exp;
     }
     else
     {
-      throw TokenException(getToken(), m_index);
+      throw ParenthesisException(*this);
     }
   }
-  else if (m_token.m_type == Token::Type::NUM)
+  else if (m_token.m_type == Token::NUM)
   {
     long val = m_token.m_val; 
     toNextToken();
     return AstNode::create(val);
   }
-  else if (m_token.m_type == Token::Type::SUB)
+  else if (m_token.m_type == Token::SUB)
   {
-    throw UnaryMinusException(m_index);
+    throw UnaryMinusException(*this);
   }
   else
   {
-    throw TokenException(getToken(), m_index);
+    throw TokenException(*this);
   }
 }
 
@@ -161,7 +172,7 @@ char Parser::getToken() const
 
 void Parser::toNextToken()
 {
-  m_token.m_type = Token::Type::NONE;
+  m_token.m_type = Token::NONE;
   m_token.m_val = 0;
   
   if (m_index == m_line.size())
@@ -192,36 +203,36 @@ void Parser::toNextToken()
     return;
   }
 
-  if (getToken() == '+')
+  char token = m_line.at(m_index);
+  ++m_index;
+  if (token == '+')
   {
-    m_token.m_type = Token::Type::ADD;
+    m_token.m_type = Token::ADD;
   }
-  else if (getToken() == '-')
+  else if (token == '-')
   {
-    m_token.m_type = Token::Type::SUB;
+    m_token.m_type = Token::SUB;
   }
-  else if (getToken() == '*')
+  else if (token == '*')
   {
-    m_token.m_type = Token::Type::MUL;
+    m_token.m_type = Token::MUL;
   }
-  else if (getToken() == '/')
+  else if (token == '/')
   {
-    m_token.m_type = Token::Type::DIV;
+    m_token.m_type = Token::DIV;
   }
-  else if (getToken() == '(')
+  else if (token == '(')
   {
-    m_token.m_type = Token::Type::OPAR;
+    m_token.m_type = Token::OPAR;
   }
-  else if (getToken() == ')')
+  else if (token == ')')
   {
-    m_token.m_type = Token::Type::CPAR;
+    m_token.m_type = Token::CPAR;
   }
   else
   {
-    throw TokenException(getToken(), m_index);
+    throw TokenException(*this);
   }
-
-  ++m_index;
 }
 
 

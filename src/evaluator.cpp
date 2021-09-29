@@ -7,9 +7,21 @@
 namespace solidity {
 
 
-Evaluator::Exception::Exception(const std::string &msg)
+Evaluator::NullException::NullException()
 :
-  std::runtime_error(msg)
+  std::runtime_error("null node")
+{
+}
+
+Evaluator::TreeException::TreeException()
+:
+  std::runtime_error("invalid tree")
+{
+}
+
+Evaluator::DivideByZeroException::DivideByZeroException()
+:
+  std::runtime_error("division by zero")
 {
 }
 
@@ -17,7 +29,7 @@ long Evaluator::eval(const AstNode::Ptr &ast) const
 {
   if (!ast)
   {
-    throw Exception("null abstract syntax tree");
+    throw NullException();
   }
   evalSubTree(ast);
 }
@@ -26,7 +38,7 @@ long Evaluator::evalSubTree(const AstNode::Ptr &ast) const
 {
   if (!ast)
   {
-    throw Exception("null abstract syntax tree");
+    throw NullException();
   }
 
   if (ast->m_type == AstNode::Type::NUM)
@@ -51,12 +63,14 @@ long Evaluator::evalSubTree(const AstNode::Ptr &ast) const
     }
     else if (ast->m_type == AstNode::Type::DIV)
     {
-      std::cout << "vl = " << vl << std::endl;
-      std::cout << "vr = " << vr << std::endl;
+      if (vr == 0)
+      {
+        throw DivideByZeroException();
+      }
       return vl / vr;
     }
   }
-  throw Exception("invalid abstract syntax tree");
+  throw TreeException();
 }
 
 
