@@ -1,21 +1,28 @@
 list(
   APPEND
   srcs
-  parser.t.cpp
+  interpreter.t.cpp
   utest.cpp
 )
 
 add_executable(utest ${srcs})
 
-target_link_Libraries(
+target_include_directories(
   utest
   PRIVATE
-  ${GTEST_LDFLAGS}
-  PkgConfig::PKG_GTEST
+  ${CMAKE_SOURCE_DIR}/src
 )
 
 target_compile_options(
   utest
   PRIVATE
   ${GTEST_CFLAGS}
+)
+
+target_link_Libraries(
+  utest
+  PRIVATE
+  ${GTEST_LDFLAGS}
+  PkgConfig::PKG_GTEST
+  interpreter_lib 
 )

@@ -14,19 +14,19 @@ namespace solidity {
 class Parser
 {
 public:
+  struct ParenthesisException : std::runtime_error                                                                                  
+  {                                                                                                                            
+    ParenthesisException(std::size_t i);                                                                                         
+  };
+
   struct DigitException : std::runtime_error                                                                                  
   {                                                                                                                            
-    DigitException(std::size_t index);                                                                                         
+    DigitException(const Parser &p);                                                                                         
   };
 
   struct UnaryMinusException : std::runtime_error                                                                                  
   {                                                                                                                            
     UnaryMinusException(const Parser &p);                                                                                         
-  };
-
-  struct ParenthesisException : std::runtime_error                                                                                  
-  {                                                                                                                            
-    ParenthesisException(const Parser &p);                                                                                         
   };
 
   struct TokenException : std::runtime_error                                                                                  
@@ -43,7 +43,7 @@ private:
   AstNode::Ptr TermPr();
   AstNode::Ptr Factor();
 
-  char getToken() const;
+  void checkParenthesis() const;
   void toNextToken();
 
   std::string m_line;

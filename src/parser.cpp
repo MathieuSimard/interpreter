@@ -12,27 +12,25 @@
 
 namespace solidity {
 
-
-Parser::DigitException::DigitException(std::size_t index)                                                                        
+Parser::ParenthesisException::ParenthesisException(std::size_t i)
 :                                                                                                                              
-  std::runtime_error(Log() << "single digit required at index = " << index)
+  std::runtime_error(Log() << "unbalanced parenthesis at index = " << i)
 {                                                                                                                              
 }                                                                                                                              
 
-Parser::UnaryMinusException::UnaryMinusException(const Parser &p)                                                                        
+Parser::DigitException::DigitException(const Parser &p)
+:                                                                                                                              
+  std::runtime_error(Log() << "single digit required at index = " << p.m_index - 1)
+{                                                                                                                              
+}                                                                                                                              
+
+Parser::UnaryMinusException::UnaryMinusException(const Parser &p)
 :                                                                                                                              
   std::runtime_error(Log() << "unary minus forbidden at index = " << p.m_index - 1)
 {                                                                                                                              
 }                                                                                                                              
 
-Parser::ParenthesisException::ParenthesisException(const Parser &p)                                                                        
-:                                                                                                                              
-  std::runtime_error(Log() << "missing closing parenthesis after token '"
-    << p.m_line.at(p.m_index - 1) << "' at index = " << p.m_index - 1)
-{                                                                                                                              
-}                                                                                                                              
-
-Parser::TokenException::TokenException(const Parser &p)                                                                        
+Parser::TokenException::TokenException(const Parser &p)
 :                                                                                                                              
   std::runtime_error(Log() << "invalid token '"
     << p.m_line.at(p.m_index - 1) << "' at index = " << p.m_index - 1)
@@ -43,6 +41,8 @@ AstNode::Ptr Parser::parse(const std::string &line)
 {
   m_line = line;
   m_index = 0;
+
+  checkParenthesis();
   toNextToken();
   return Exp();
 }
@@ -101,11 +101,7 @@ AstNode::Ptr Parser::TermPr()
 {
   AstNode::Ptr left;
   AstNode::Ptr right;
-  if (m_token.m_type == Token::OPAR || m_token.m_type == Token::CPAR)
-  {
-    throw TokenException(*this);
-  }
-  else if (m_token.m_type == Token::MUL)
+  if (m_token.m_type == Token::MUL)
   {
     toNextToken();
     right = Factor();
@@ -146,7 +142,8 @@ AstNode::Ptr Parser::Factor()
     }
     else
     {
-      throw ParenthesisException(*this);
+      std::cout << "SUPPOSED TO BE OKAY" << std::endl;
+      //throw ParenthesisException(*this);
     }
   }
   else if (m_token.m_type == Token::NUM)
@@ -165,9 +162,30 @@ AstNode::Ptr Parser::Factor()
   }
 }
 
-char Parser::getToken() const
+void Parser::checkParenthesis() const
 {
-  return m_line.at(m_index);
+  int idx = 0;
+  int cnt = 0;
+  for (char token : m_line)
+  {
+    if (token == ')')
+    {
+      if (cnt == 0)
+      {
+        throw ParenthesisException(idx);
+      }
+      --cnt;
+    }
+    else if (token == '(')
+    {
+      ++cnt;
+    }
+    ++idx;
+  }
+  if (cnt != 0)
+  {
+    throw ParenthesisException(idx);
+  }
 }
 
 void Parser::toNextToken()
@@ -181,7 +199,7 @@ void Parser::toNextToken()
     return;
   }
 
-  while (std::isspace(getToken()))
+  while (std::isspace(m_line.at(m_index)))
   {
     ++m_index;
     if (m_index == m_line.size())
@@ -191,14 +209,14 @@ void Parser::toNextToken()
     }
   }
 
-  if (std::isdigit(getToken()))
+  if (std::isdigit(m_line.at(m_index)))
   {
     if (m_index + 1 < m_line.size() && std::isdigit(m_line.at(m_index + 1)))
     {
-      throw DigitException(m_index);
+      throw DigitException(*this);
     }
     m_token.m_type = Token::Type::NUM;
-    m_token.m_val = getToken() - '0';
+    m_token.m_val = m_line.at(m_index) - '0';
     ++m_index;
     return;
   }

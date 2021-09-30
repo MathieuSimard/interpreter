@@ -7,7 +7,8 @@ list(
   log.cpp
   parser.cpp
   token.cpp
-  main.cpp
 )
 
-add_executable(main ${srcs})
+add_executable(interpreter ${srcs} main.cpp)
+
+add_library(interpreter_lib SHARED ${srcs})
