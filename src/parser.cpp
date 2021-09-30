@@ -20,7 +20,7 @@ Parser::ParenthesisException::ParenthesisException(std::size_t i)
 
 Parser::DigitException::DigitException(const Parser &p)
 :                                                                                                                              
-  std::runtime_error(Log() << "single digit required at index = " << p.m_index - 1)
+  std::runtime_error(Log() << "single digit required at index = " << p.m_index)
 {                                                                                                                              
 }                                                                                                                              
 
@@ -135,16 +135,8 @@ AstNode::Ptr Parser::Factor()
   {
     toNextToken();
     AstNode::Ptr exp = Exp();
-    if (m_token.m_type != Token::EOL && m_line.at(m_index - 1) == ')')
-    {
-      toNextToken();
-      return exp;
-    }
-    else
-    {
-      std::cout << "SUPPOSED TO BE OKAY" << std::endl;
-      //throw ParenthesisException(*this);
-    }
+    toNextToken();
+    return exp;
   }
   else if (m_token.m_type == Token::NUM)
   {
