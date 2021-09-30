@@ -47,6 +47,10 @@ AstNode::Ptr Parser::parse(const std::string &line)
   return Expr();
 }
 
+/*
+  left-associative parser (iteration)
+*/
+
 AstNode::Ptr Parser::Expr()
 {
   AstNode::Ptr left = Term();
@@ -173,7 +177,6 @@ void Parser::nextToken()
   }
 
   char token = m_line.at(m_index);
-  ++m_index;
   if (token == '+')
   {
     m_token.m_type = Token::ADD;
@@ -202,6 +205,8 @@ void Parser::nextToken()
   {
     throw TokenException(*this);
   }
+  
+  ++m_index;
 }
 
 

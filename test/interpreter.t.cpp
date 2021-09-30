@@ -28,5 +28,6 @@ TEST(InterpreterEval, Evaluation)
   EXPECT_THROW(test.eval("5)"), Parser::ParenthesisException);
   EXPECT_THROW(test.eval("5))"), Parser::ParenthesisException);
 
-
+  EXPECT_EQ(test.eval("9/2/2"), 2);
+  EXPECT_THROW(test.eval("5/0"), Evaluator::DivideByZeroException);
 }

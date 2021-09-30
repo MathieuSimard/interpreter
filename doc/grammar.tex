@@ -6,10 +6,8 @@
 
 \section{Grammar}
 
-<Exp> ::= <Term><Exp$^{\prime}$>\\
-<Exp$^{\prime}$> ::= $+$ <Term><Exp$^{\prime}$> | $-$ <Term><Exp$^{\prime}$> | $\epsilon$\\
-<Term> ::= <Factor><Term$^{\prime}$>\\
-<Term$^\prime$> ::= $\times$ <Factor><Term$^{\prime}$> | $\div$<Factor><Term$^{\prime}$> | $\epsilon$\\
-<Factor> ::= (<Exp>) | digit
+<Expr> ::= Term ( ('+' | '-') Term )$^{*}$\\
+<Term> ::= Factor ( ('*' | '/') Factor)$^{*}$\\
+<Factor> ::= '(' Expr ')' | digit
 
 \end{document}

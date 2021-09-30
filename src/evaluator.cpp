@@ -41,7 +41,7 @@ long Evaluator::evalSubTree(const AstNode::Ptr &ast) const
     throw NullException();
   }
 
-  if (ast->m_type == AstNode::Type::NUM)
+  if (ast->m_type == AstNode::NUM)
   {
     return ast->m_val;
   }
@@ -49,19 +49,19 @@ long Evaluator::evalSubTree(const AstNode::Ptr &ast) const
   {
     long vl = evalSubTree(ast->m_left);
     long vr = evalSubTree(ast->m_right);
-    if (ast->m_type == AstNode::Type::ADD)
+    if (ast->m_type == AstNode::ADD)
     {
       return vl + vr;
     }
-    else if (ast->m_type == AstNode::Type::SUB)
+    else if (ast->m_type == AstNode::SUB)
     {
       return vl - vr;
     }
-    else if (ast->m_type == AstNode::Type::MUL)
+    else if (ast->m_type == AstNode::MUL)
     {
       return vl * vr;
     }
-    else if (ast->m_type == AstNode::Type::DIV)
+    else if (ast->m_type == AstNode::DIV)
     {
       if (vr == 0)
       {
