@@ -1,0 +1,13 @@
+\documentclass[10pt,letterpaper]{article}
+\usepackage{amsmath}
+\usepackage[T1]{fontenc}
+
+\begin{document}
+
+\section{Grammar}
+
+<Expr> ::= Term ( ('+' | '-') Term )$^{*}$\\
+<Term> ::= Factor ( ('*' | '/') Factor)$^{*}$\\
+<Factor> ::= '(' Expr ')' | digit
+
+\end{document}

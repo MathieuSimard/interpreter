@@ -1,2 +1,1 @@
-# interpreter
-Interpreter
+# Arithmetic Interpreter
