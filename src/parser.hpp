@@ -37,14 +37,12 @@ public:
   AstNode::Ptr parse(const std::string &line);
 
 private:
-  AstNode::Ptr Exp();
-  AstNode::Ptr ExpPr();
+  AstNode::Ptr Expr();
   AstNode::Ptr Term();
-  AstNode::Ptr TermPr();
   AstNode::Ptr Factor();
 
   void checkParenthesis() const;
-  void toNextToken();
+  void nextToken();
 
   std::string m_line;
   std::size_t m_index;
