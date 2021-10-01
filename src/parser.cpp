@@ -25,9 +25,9 @@ Parser::DigitException::DigitException(const Parser &p)
 {
 }
 
-Parser::UnaryMinusException::UnaryMinusException(const Parser &p)
+Parser::UnaryOpException::UnaryOpException(const Parser &p)
 :  
-  std::runtime_error(Log() << "unary minus forbidden at index = " << p.m_index - 1)
+  std::runtime_error(Log() << "unary operation forbidden at index = " << p.m_index - 1)
 {
 }
 
@@ -97,6 +97,7 @@ AstNode::Ptr Parser::Factor()
 {
   if (m_token.m_type == Token::OPAR)
   {
+    nextToken();
     AstNode::Ptr expr = Expr();
     nextToken();
     return expr;
@@ -107,9 +108,9 @@ AstNode::Ptr Parser::Factor()
     nextToken();
     return AstNode::create(val);
   }
-  else if (m_token.m_type == Token::SUB)
+  else if (m_token.m_type == Token::ADD || m_token.m_type == Token::SUB)
   {
-    throw UnaryMinusException(*this);
+    throw UnaryOpException(*this);
   }
   else
   {
@@ -166,9 +167,13 @@ void Parser::nextToken()
 
   if (std::isdigit(m_line.at(m_index)))
   {
-    if (m_index + 1 < m_line.size() && std::isdigit(m_line.at(m_index + 1)))
+    if (m_index + 1 < m_line.size())
     {
-      throw DigitException(*this);
+      char c = m_line.at(m_index + 1);
+      if (std::isdigit(c) || c == 'e' || c == 'E' || c == '.')
+      {
+        throw DigitException(*this);
+      }
     }
     m_token.m_type = Token::NUM;
     m_token.m_val = m_line.at(m_index) - '0';
