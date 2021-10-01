@@ -24,9 +24,9 @@ public:
     DigitException(const Parser &p);                                                                                         
   };
 
-  struct UnaryMinusException : std::runtime_error                                                                                  
+  struct UnaryOpException : std::runtime_error                                                                                  
   {                                                                                                                            
-    UnaryMinusException(const Parser &p);                                                                                         
+    UnaryOpException(const Parser &p);                                                                                         
   };
 
   struct TokenException : std::runtime_error                                                                                  
